@@ -23,16 +23,26 @@ export default function Testimonials() {
     fetchTestimonials();
   }, []);
 
-  const handlePrev = () => {
-    setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    setPage((prev) => prev - 1);
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 4500);
+  
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [testimonials, currentIndex]);
 
   const handleNext = () => {
     setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    setCurrentIndex((prev) => (prev + visibleCount) % testimonials.length);
     setPage((prev) => prev + 1);
+  };
+  
+  const handlePrev = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) =>
+      (prev - visibleCount + testimonials.length) % testimonials.length
+    );
+    setPage((prev) => prev - 1);
   };
 
   const getVisibleTestimonials = () => {
